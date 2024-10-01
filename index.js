@@ -8,22 +8,82 @@ const continentes = {
     'Oceanía': ['Australia','Fiji','Islas de Cook','Kiribati','Micronesie','Nueva Zelanda','Papúa Nueva Guinea','Samoa','Tonga','Vanuatu']
 }
 
-function continenteAzar() {
-    const continenteInfo = Object.keys(continentes);
-    const randomIndex = Math.floor(Math.random() * continenteInfo.length);
-    return continenteInfo[randomIndex];
+// Base de la iteración
+let continenteIndex = 0;
+let paisIndex = 0;
+
+// Función continente
+function continenteItinerante() {
+    const continenteKeys = Object.keys(continentes);
+    const continente = continenteKeys[continenteIndex];
+    continenteIndex = (continenteIndex + 1) % continenteKeys.length;
+    return continente;
 }
 
-function paisAzarDeContinente(continente) {
+// Función país
+function paisItineranteDeContinente(continente) {
     const paises = continentes[continente];
-    if (paises && paises.length > 0) {
-        const randomIndex = Math.floor(Math.random() * paises.length);
-        return paises[randomIndex];
-    }
+    const pais = paises[paisIndex];
+    paisIndex = (paisIndex + 1) % paises.length;
+    return pais;
 }
 
-function mostrarPaisAzar() {
-    const continente = continenteAzar();
-    const pais = paisAzarDeContinente(continente);
+// Función que muestra
+function mostrarPaisItinerante() {
+    const continente = continenteItinerante();
+    const pais = paisItineranteDeContinente(continente);
     document.getElementById('Resultado').innerText = `Continente: ${continente}\nPaís: ${pais}`;
 }
+
+// Opciones trasldado, costo y animal
+const traslados = [
+    { medio: 'Bicicleta', animal: 'Gato', costo: 50 },
+    { medio: 'Moto', animal: 'Perro', costo: 150 },
+    { medio: 'Bus', animal: 'Loro', costo: 200 },
+    { medio: 'Avión', animal: 'Tigre', costo: 500 },
+    { medio: 'Barco', animal: 'Caballo', costo: 1000 },
+    { medio: 'Cohete espacial', animal: 'Elefante', costo: 5000 }
+];
+
+// Función tabla
+function generarTablaTraslados() {
+    const tabla = document.getElementById('tablaTraslados');
+    tabla.innerHTML = '';
+
+    traslados.forEach((traslado, index) => {
+        const fila = document.createElement('tr');
+
+        // Celdas con información de la tabla
+        const medioCell = document.createElement('td');
+        medioCell.textContent = traslado.medio;
+        fila.appendChild(medioCell);
+
+        const animalCell = document.createElement('td');
+        animalCell.textContent = traslado.animal;
+        fila.appendChild(animalCell);
+
+        const costoCell = document.createElement('td');
+        costoCell.textContent = `$${traslado.costo}`;
+        fila.appendChild(costoCell);
+
+        // Botones para escoger traslado, mascota y valor.
+        const botonCell = document.createElement('td');
+        const botonSeleccion = document.createElement('button');
+        botonSeleccion.textContent = 'Seleccionar';
+        botonSeleccion.onclick = () => seleccionarTraslado(index);
+        botonCell.appendChild(botonSeleccion);
+        fila.appendChild(botonCell);
+
+        tabla.appendChild(fila);
+    });
+}
+
+// Función traslado, mascota y precio.
+function seleccionarTraslado(index) {
+    const traslado = traslados[index];
+    const resultado = document.getElementById('resultado');
+    resultado.textContent = `Has seleccionado: ${traslado.medio}, con tu mascota: ${traslado.animal}, por un costo de $${traslado.costo}.`;
+}
+
+//Comando tabla
+window.onload = generarTablaTraslados;
